@@ -121,3 +121,16 @@ Knn_fit <- caret::train(x = Heart_Train[,-14],
 Knn_fit$bestTune
 Knnfit_Pred <- predict(Knn_fit)
 confusionMatrix(Knnfit_Pred, Heart_Train[,14])
+
+#Try a binary outcome approach
+Binary_Heart_Response <- data.frame(Response = as.factor(c(ifelse(Heart_Train$Num==0,0,1))))
+
+#Train and predict k-NN, check accuracy
+Binary_kNN <- train( x = Heart_Train[,-14],
+                     y = Binary_Heart_Response$Response,
+                     method = "knn",
+                     trControl = TrainControl,
+                     tuneGrid = data.frame(k = c(5:21)))
+Binary_Pred <- predict(Binary_kNN)
+confusionMatrix(Binary_Pred, Binary_Heart_Response$Response)
+
